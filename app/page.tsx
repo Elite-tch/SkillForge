@@ -7,7 +7,7 @@ import Link from "next/link";
 
 
 const Hero = () => (
-  <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-white/5 bg-black pt-20 pb-20">
+  <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-white/5 bg-black pt-10 md:pt-20 pb-20">
     {/* Animated Background Layers */}
     <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
       {/* Moving Grid */}

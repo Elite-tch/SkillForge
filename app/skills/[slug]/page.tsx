@@ -200,9 +200,9 @@ export default function SkillDetail({ params }: { params: Promise<{ slug: string
             <div className="mx-auto max-w-5xl px-4 py-12">
                 {/* Header Section */}
                 <div className="mb-10 flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
-                    <div className="flex gap-8">
+                    <div className="flex flex-col gap-8 md:flex-row">
                         {/* Skill Image */}
-                        <div className="h-32 w-32 rounded-sm overflow-hidden border border-white/10 shadow-2xl shadow-[#00ffbd]/10 bg-neutral-900 shrink-0">
+                        <div className="md:h-32 md:w-32 max-h-80 rounded-sm overflow-hidden border border-white/10 shadow-2xl shadow-[#00ffbd]/10 bg-neutral-900 shrink-0">
                             <img
                                 src={skill.image}
                                 alt={skill.name}
