@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import {
   CreditCard, Monitor, Package, Settings, Plus,
-  BarChart, Wallet, LogOut, Terminal
+  BarChart, Wallet, LogOut, Terminal, Code2, Activity, MessageSquare, Check, Share2,
+  GitCommit, DollarSign, Clock, Layout, Shield, Box, Star, Menu, X
 } from "lucide-react";
 import { mockSkills } from "../lib/mock-data";
 
@@ -36,6 +37,7 @@ const StatCard = ({ title, value, sub, trend }: any) => (
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("overview");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [skills, setSkills] = useState(mockSkills);
   const [newSkillName, setNewSkillName] = useState("");
   const [newSkillCategory, setNewSkillCategory] = useState("Analysis");
@@ -65,8 +67,19 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-[#8247e5]/30 flex">
+      {/* Mobile Nav Toggle */}
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="fixed bottom-6 right-6 z-[60] flex h-14 w-14 items-center justify-center rounded-full bg-[#8247e5] text-white shadow-lg md:hidden"
+      >
+        {isSidebarOpen ? <X /> : <Menu />}
+      </button>
+
       {/* Sidebar */}
-      <aside className="w-64 border-r border-white/10 p-6 hidden md:flex flex-col">
+      <aside className={`
+        fixed inset-y-0 left-0 z-50 w-64 border-r border-white/10 bg-black p-6 transition-transform duration-300 md:relative md:translate-x-0
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
         {/* Sidebar content starts with space for global navbar */}
         <div className="mt-4 space-y-2 flex-1">
           <SidebarLink

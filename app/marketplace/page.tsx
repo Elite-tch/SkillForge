@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import Link from "next/link";
 import { Search, Filter, Star, Zap, Shield, ChevronRight } from "lucide-react";
@@ -86,42 +88,70 @@ const skills = [
 
 
 export default function Marketplace() {
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [activeCategory, setActiveCategory] = React.useState("All");
+
+  const categories = ["All", "Analysis", "Language", "Data", "Security", "Creative", "Social"];
+
+  const filteredSkills = skills.filter(skill => {
+    const matchesSearch = skill.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      skill.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = activeCategory === "All" || skill.tags.includes(activeCategory);
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <main className="min-h-screen bg-black text-white selection:bg-[#8247e5]/30">
+    <main className="min-h-screen bg-black text-white selection:bg-[#00ffbd]/30">
+
+    
 
       <div className="mx-auto max-w-6xl px-4 py-8">
         {/* Header */}
-        <div className="mb-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white font-display">Discover Skills</h1>
-            <p className="mt-2 text-sm text-slate-400">
+            <h1 className="text-3xl font-black uppercase tracking-tighter text-white font-display">Discover Skills</h1>
+            <p className="mt-2 text-sm text-slate-500 font-medium">
               Browse the decentralized registry of MCP capabilities.
             </p>
           </div>
 
-          <div className="flex w-full md:w-auto gap-2">
-            <div className="relative flex-1 md:w-64">
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
+          <div className="flex flex-col sm:flex-row w-full lg:w-auto gap-4">
+            <div className="relative flex-1 md:w-80">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
               <input
                 type="text"
-                placeholder="Search skills..."
-                className="w-full rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 py-2 text-sm text-white placeholder:text-slate-600 focus:border-[#8247e5] focus:outline-none"
+                placeholder="Search capabilities by name or type..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-sm border border-white/10 bg-white/5 pl-10 pr-4 py-3 text-sm text-white placeholder:text-slate-600 focus:border-[#00ffbd] focus:outline-none transition-all"
               />
             </div>
-            <button className="flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white">
-              <Filter className="h-4 w-4" />
-              <span>Filter</span>
-            </button>
           </div>
         </div>
 
+        {/* Categories Bar */}
+        <div className="mb-8 flex flex-wrap gap-2">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${activeCategory === cat
+                ? "bg-[#00ffbd] text-black border border-[#00ffbd]"
+                : "text-slate-500 border border-white/5 bg-white/5 hover:border-white/20 hover:text-white"
+                }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
         {/* Grid */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {skills.map((skill) => (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredSkills.map((skill) => (
             <Link
               key={skill.id}
               href={`/skills/${skill.slug}`}
-              className="group relative flex flex-col overflow-hidden rounded-xl border border-white/10 bg-neutral-900/40 transition-all hover:bg-neutral-900/60 hover:border-white/20 hover:-translate-y-1"
+              className="group relative flex flex-col overflow-hidden rounded-sm border border-white/5 bg-neutral-900/20 transition-all hover:border-[#00ffbd]/30 hover:-translate-y-1"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-[#8247e5]/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none" />
 

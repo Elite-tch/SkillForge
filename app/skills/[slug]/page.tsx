@@ -1,9 +1,11 @@
+'use client'
+
 import React from "react";
 import Link from "next/link";
 import {
     ArrowLeft, Star, Share2, Shield, Zap, Box,
     Terminal, Code2, Activity, MessageSquare,
-    GitCommit, DollarSign, Clock, Layout
+    GitCommit, DollarSign, Clock, Layout, Check
 } from "lucide-react";
 
 // Mock Data (matches marketplace list)
@@ -153,19 +155,54 @@ const skills: Record<string, any> = {
     }
 };
 
-export default function SkillDetail({ params }: { params: { slug: string } }) {
-    const skill = skills[params.slug] || skills["default"];
+export default function SkillDetail({ params }: { params: Promise<{ slug: string }> }) {
+    const resolvedParams = React.use(params);
+    const skill = skills[resolvedParams.slug] || skills["default"];
+    const [isInstalling, setIsInstalling] = React.useState(false);
+    const [showSuccess, setShowSuccess] = React.useState(false);
+
+    const handleInstall = () => {
+        setIsInstalling(true);
+        // Simulate Monad transaction
+        setTimeout(() => {
+            setIsInstalling(false);
+            setShowSuccess(true);
+        }, 2000);
+    };
 
     return (
-        <main className="min-h-screen bg-black text-white selection:bg-[#8247e5]/30">
+        <main className="min-h-screen bg-black text-white selection:bg-[#00ffbd]/30">
 
+            {/* Success Modal */}
+            {showSuccess && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+                    <div className="w-full max-w-sm rounded-sm border border-[#00ffbd]/30 bg-neutral-900 p-8 text-center shadow-[0_0_50px_rgba(0,255,189,0.1)]">
+                        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#00ffbd]/10 text-[#00ffbd]">
+                            <Check className="h-8 w-8" />
+                        </div>
+                        <h3 className="mb-2 text-xl font-black uppercase tracking-tight">Access Granted</h3>
+                        <p className="mb-6 text-sm text-slate-400">
+                            Capability <span className="text-white font-bold">{skill.name}</span> has been registered to your agent's API registry via Monad settlement.
+                        </p>
+                        <div className="mb-6 rounded-sm bg-black/40 p-3 font-mono text-[10px] text-slate-500 border border-white/5">
+                            TX: 0x5a8...f2e9
+                        </div>
+                        <button
+                            onClick={() => setShowSuccess(false)}
+                            className="w-full rounded-sm bg-[#00ffbd] py-3 text-xs font-black uppercase tracking-widest text-black hover:bg-white transition-colors"
+                        >
+                            Dismiss
+                        </button>
+                    </div>
+                </div>
+            )}
 
             <div className="mx-auto max-w-5xl px-4 py-12">
                 {/* Header Section */}
-                <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                    <div className="flex gap-6">
+                <div className="mb-10 flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+                    <div className="flex gap-8">
                         {/* Skill Image */}
-                        <div className="h-24 w-24 rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-[#8247e5]/20 bg-neutral-900 shrink-0">
+                        <div className="h-32 w-32 rounded-sm overflow-hidden border border-white/10 shadow-2xl shadow-[#00ffbd]/10 bg-neutral-900 shrink-0">
                             <img
                                 src={skill.image}
                                 alt={skill.name}
@@ -173,64 +210,106 @@ export default function SkillDetail({ params }: { params: { slug: string } }) {
                             />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold text-white font-display mb-2 flex items-center gap-3">
+                            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-white/5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-slate-500 border border-white/5">
+                                MCP-Native Skill
+                            </div>
+                            <h1 className="text-4xl font-black uppercase tracking-tighter text-white font-display mb-3 flex items-center gap-3">
                                 {skill.name}
-                                {skill.verified && <Shield className="h-5 w-5 text-[#00ffbd] fill-[#00ffbd]/10" />}
+                                {skill.verified && <Shield className="h-6 w-6 text-[#00ffbd]" />}
                             </h1>
-                            <div className="flex items-center gap-4 text-sm text-slate-400">
-                                <span className="flex items-center gap-1">
-                                    <Box className="h-3.5 w-3.5" /> {skill.author}
+                            <div className="flex flex-wrap items-center gap-6 text-xs text-slate-500 font-bold uppercase tracking-widest">
+                                <span className="flex items-center gap-1.5 hover:text-white transition-colors">
+                                    <Box className="h-4 w-4 text-[#00ffbd]" /> {skill.author}
                                 </span>
-                                <span className="flex items-center gap-1">
+                                <span className="flex items-center gap-1.5">
                                     v{skill.version}
                                 </span>
-                                <span className="flex items-center gap-1 text-yellow-500">
-                                    <Star className="h-3.5 w-3.5 fill-current" /> {skill.rating}
+                                <span className="flex items-center gap-1.5 text-yellow-500/80">
+                                    <Star className="h-4 w-4 fill-current text-yellow-500" /> {skill.rating}
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-3 min-w-[200px]">
-                        <button className="flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-bold text-black hover:bg-slate-200 transition-colors">
-                            Install Skill
+                    <div className="flex flex-col gap-3 min-w-[220px]">
+                        <button
+                            onClick={handleInstall}
+                            disabled={isInstalling}
+                            className="group relative flex h-14 items-center justify-center gap-3 rounded-sm bg-[#00ffbd] px-6 text-sm font-black uppercase tracking-widest text-black transition-all hover:translate-x-1 hover:-translate-y-1 hover:shadow-[-4px_4px_0_white] disabled:opacity-50 disabled:translate-x-0 disabled:translate-y-0 disabled:shadow-none"
+                        >
+                            {isInstalling ? (
+                                <>
+                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent" />
+                                    Settling...
+                                </>
+                            ) : (
+                                <>Purchase Access</>
+                            )}
                         </button>
-                        <button className="flex items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors">
-                            <Share2 className="h-4 w-4" /> Share
-                        </button>
+                        <div className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">
+                            HTTP 402 Micropayment Required
+                        </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-12 border-t border-white/5">
                     {/* Main Content */}
-                    <div className="lg:col-span-2 space-y-10">
+                    <div className="lg:col-span-2 space-y-12">
                         <section>
-                            <h2 className="text-xl font-bold text-white mb-4">About</h2>
-                            <p className="text-slate-400 leading-relaxed text-sm">
+                            <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#00ffbd] mb-6">Technical Architecture</h2>
+                            <p className="text-slate-400 leading-relaxed text-sm lg:text-md">
                                 {skill.fullDescription}
                             </p>
                         </section>
 
                         <section>
-                            <h2 className="text-xl font-bold text-white mb-4">Endpoints</h2>
-                            <div className="rounded-xl border border-white/10 bg-neutral-900/50 overflow-hidden">
-                                {skill.endpoints && skill.endpoints.map((ep: any, idx: number) => (
-                                    <div key={idx} className="flex items-center gap-4 px-4 py-3 border-b border-white/5 last:border-0 font-mono text-xs">
-                                        <span className={`px-2 py-1 rounded bg-white/5 text-white font-bold ${ep.method === 'GET' ? 'text-blue-400' : 'text-emerald-400'}`}>
-                                            {ep.method}
-                                        </span>
-                                        <span className="text-slate-300">{ep.path}</span>
-                                        <span className="text-slate-500 ml-auto hidden sm:block">{ep.desc}</span>
+                            <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#00ffbd] mb-6">Integration Pipeline</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                {[
+                                    { step: "01", title: "Authorize", desc: "Settle 402 payment on Monad" },
+                                    { step: "02", title: "Config", desc: "Inject skill ID into MCP registry" },
+                                    { step: "03", title: "Invoke", desc: "Execute via standard JSON-RPC" },
+                                ].map((item) => (
+                                    <div key={item.step} className="rounded-sm border border-white/5 bg-white/5 p-4 text-center">
+                                        <div className="text-[10px] font-black text-slate-600 mb-1">{item.step}</div>
+                                        <div className="text-xs font-bold text-white mb-2">{item.title}</div>
+                                        <div className="text-[10px] text-slate-500 leading-tight">{item.desc}</div>
                                     </div>
                                 ))}
                             </div>
                         </section>
 
                         <section>
-                            <h2 className="text-xl font-bold text-white mb-4">Integration</h2>
-                            <div className="rounded-xl border border-white/10 bg-black p-4 font-mono text-xs text-slate-300 overflow-x-auto">
-                                <span className="text-purple-400">const</span> client = <span className="text-purple-400">new</span> MCPClient({'{'} <span className="text-blue-400">skill</span>: <span className="text-emerald-400">"{skill.slug}"</span> {'}'});<br />
-                                <span className="text-purple-400">await</span> client.connect();
+                            <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#00ffbd] mb-6">REST Endpoints</h2>
+                            <div className="rounded-sm border border-white/5 bg-neutral-900/50 overflow-hidden">
+                                {skill.endpoints && skill.endpoints.map((ep: any, idx: number) => (
+                                    <div key={idx} className="flex items-center gap-4 px-6 py-4 border-b border-white/5 last:border-0 font-mono text-xs">
+                                        <span className={`px-2 py-1 rounded-sm text-[10px] font-black ${ep.method === 'GET' ? 'bg-blue-500/10 text-blue-400' : 'bg-[#00ffbd]/10 text-[#00ffbd]'}`}>
+                                            {ep.method}
+                                        </span>
+                                        <span className="text-slate-300 font-bold">{ep.path}</span>
+                                        <span className="text-slate-500 ml-auto hidden sm:block italic">{ep.desc}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section>
+                            <h2 className="text-xs font-black uppercase tracking-[0.3em] text-[#00ffbd] mb-6">Agent Implementation</h2>
+                            <div className="rounded-sm border border-white/5 bg-black p-6 font-mono text-xs text-slate-300 overflow-x-auto shadow-inner">
+                                <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-2">
+                                    <span className="text-slate-600 tracking-widest text-[10px] uppercase">main.ts</span>
+                                    <div className="flex gap-1">
+                                        <div className="h-2 w-2 rounded-full bg-white/10" />
+                                        <div className="h-2 w-2 rounded-full bg-white/10" />
+                                    </div>
+                                </div>
+                                <span className="text-purple-400">const</span> client = <span className="text-purple-400">new</span> MCPClient({'{'} <br />
+                                &nbsp;&nbsp;<span className="text-blue-400">skill</span>: <span className="text-[#00ffbd]">"{skill.slug}"</span>, <br />
+                                &nbsp;&nbsp;<span className="text-blue-400">auth</span>: <span className="text-[#00ffbd]">"bearer_monad_settled"</span> <br />
+                                {'}'});<br />
+                                <span className="text-purple-400">await</span> client.connect(); <br />
+                                <span className="text-slate-500 mt-2 block">// Capability ready for agent invocation</span>
                             </div>
                         </section>
                     </div>
