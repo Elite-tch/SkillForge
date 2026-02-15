@@ -42,22 +42,24 @@ export function useMySkills() {
   console.log('⏳ useMySkills - Loading state:', isLoading);
   console.log('❌ useMySkills - Error:', error);
 
+  const skillIds = mySkillIds as bigint[] | undefined;
+
   // Fetch full skill details for each skill ID
   useEffect(() => {
     async function fetchSkillsWithMetadata() {
       console.log('🚀 Starting fetchSkillsWithMetadata...');
-      console.log('📊 mySkillIds:', mySkillIds);
-      console.log('📊 Is array?', Array.isArray(mySkillIds));
-      console.log('📊 Length:', mySkillIds?.length);
+      console.log('📊 skillIds:', skillIds);
+      console.log('📊 Is array?', Array.isArray(skillIds));
+      console.log('📊 Length:', skillIds?.length);
 
-      if (!mySkillIds || !Array.isArray(mySkillIds) || (mySkillIds as any[]).length === 0) {
+      if (!skillIds || !Array.isArray(skillIds) || (skillIds as any[]).length === 0) {
         console.log('⚠️ No skill IDs found, setting empty array');
         setSkills([]);
         return;
       }
 
       setIsLoadingMetadata(true);
-      console.log('⏳ Loading metadata for', mySkillIds.length, 'skills');
+      console.log('⏳ Loading metadata for', skillIds.length, 'skills');
 
       try {
         // Create public client for direct blockchain reads
@@ -71,8 +73,8 @@ export function useMySkills() {
         });
         console.log('✅ Public client created');
 
-        const skillPromises = (mySkillIds as bigint[]).map(async (skillId, index) => {
-          console.log(`\n🔄 [${index + 1}/${mySkillIds.length}] Fetching skill #${skillId}...`);
+        const skillPromises = (skillIds as bigint[]).map(async (skillId, index) => {
+          console.log(`\n🔄 [${index + 1}/${skillIds.length}] Fetching skill #${skillId}...`);
 
           try {
             // Fetch skill data directly from blockchain (no backend route!)
@@ -112,7 +114,7 @@ export function useMySkills() {
             // Fetch metadata from URI
             let metadata = {
               name: `Skill #${skillId}`,
-              description: metadataURI || '',
+              description: (metadataURI as string) || '',
               category: 'General',
             };
 
@@ -120,7 +122,7 @@ export function useMySkills() {
               console.log(`📦 Fetching metadata from: ${metadataURI}`);
               try {
                 // Convert IPFS URI to gateway URL
-                let metadataUrl = metadataURI;
+                let metadataUrl = metadataURI as string;
                 if (metadataUrl.startsWith('ipfs://')) {
                   const hash = metadataUrl.replace('ipfs://', '');
                   metadataUrl = `https://gateway.pinata.cloud/ipfs/${hash}`;
@@ -148,11 +150,11 @@ export function useMySkills() {
               name: metadata.name,
               description: metadata.description,
               category: metadata.category,
-              creator: creator || '0x0',
-              pricePerUse: pricePerUse || 0n,
-              isActive: isActive ?? true,
-              totalCalls: totalCalls || 0n,
-              metadataURI: metadataURI || '',
+              creator: (creator as string) || '0x0',
+              pricePerUse: (pricePerUse as bigint) || BigInt(0),
+              isActive: (isActive as boolean) ?? true,
+              totalCalls: (totalCalls as bigint) || BigInt(0),
+              metadataURI: (metadataURI as string) || '',
             };
 
             console.log(`✅ Skill #${skillId} processed:`, skillWithMetadata);
@@ -182,10 +184,10 @@ export function useMySkills() {
 
     fetchSkillsWithMetadata();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mySkillIds?.length, mySkillIds?.[0]?.toString()]); // Track length and first ID
+  }, [skillIds?.length, skillIds?.[0]?.toString()]); // Track length and first ID
 
   console.log('📤 useMySkills returning:', {
-    skillIds: mySkillIds,
+    skillIds,
     skills,
     skillsCount: skills.length,
     isLoading: isLoading || isLoadingMetadata,
@@ -193,7 +195,7 @@ export function useMySkills() {
   });
 
   return {
-    skillIds: mySkillIds as bigint[] | undefined,
+    skillIds,
     skills,
     isLoading: isLoading || isLoadingMetadata,
     error,

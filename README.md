@@ -109,6 +109,14 @@ To connect an agent to SkillForge, add the following to your mcp_config.json:
 {
   "mcpServers": {
     "skillforge": {
+      "url": "https://skillforge-mcp.onrender.com/sse"
+    }
+  }
+}
+
+{
+  "mcpServers": {
+    "skillforge": {
       "command": "npx",
       "args": ["-y", "@skillforge/mcp-client"],
       "env": {

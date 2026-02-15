@@ -61,8 +61,8 @@ export function useWithdraw() {
   }, [isSuccess, refetch]);
 
   return {
-    balance: balance || BigInt(0),
-    balanceFormatted: balance ? formatEther(balance) : '0',
+    balance: (balance as bigint) || BigInt(0),
+    balanceFormatted: balance ? formatEther(balance as bigint) : '0',
     withdraw,
     isPending: isWritePending || isConfirming,
     isSuccess,

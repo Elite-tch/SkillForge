@@ -24,7 +24,7 @@ export function usePurchaseSkill() {
     data: receipt,
     error: confirmError
   } = useWaitForTransactionReceipt({
-    hash
+    hash: hash as `0x${string}` | undefined
   });
 
   const purchaseSkill = async (skillId: number, price: bigint) => {
@@ -48,16 +48,16 @@ export function usePurchaseSkill() {
       try {
         const logs = parseEventLogs({
           abi: SkillPaymentABI.abi,
-          logs: receipt.logs,
+          logs: (receipt as any).logs,
         });
 
         // Find the SkillPurchased event
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const purchaseLog = logs.find((log: any) => log.eventName === 'SkillPurchased');
+        const purchaseLog = logs.find((log: any) => log.eventName === 'SkillPurchased') as any;
 
         if (purchaseLog && purchaseLog.args) {
           // Safely extract transactionId from args
-          const args = purchaseLog.args as { transactionId?: bigint;[key: string]: any };
+          const args = purchaseLog.args as { transactionId?: `0x${string}` | bigint;[key: string]: any };
           if (args.transactionId !== undefined) {
             setTransactionId(args.transactionId.toString());
           }
