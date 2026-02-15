@@ -250,7 +250,7 @@ export default function Marketplace() {
                       className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-sm font-bold text-sm transition-all bg-white/5 text-slate-500 border border-white/10 cursor-default"
                     >
                       <Shield className="h-4 w-4" />
-                      Marketplace Asset (Read Only)
+                      Add SKillForge to your CLI
                     </button>
 
                     {/* Transaction Hash */}
