@@ -108,7 +108,7 @@ The core of SkillForge is the **SkillRegistry** contract.
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/skillforge.git
+    git clone https://github.com/Elite-tch/SkillForge.git
     cd skillforge
     ```
 
