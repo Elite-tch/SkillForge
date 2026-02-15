@@ -14,6 +14,7 @@ export interface SkillWithMetadata {
   metadataURI: string;
   image?: string;
   tags: string[];
+  fullDescription?: string;
 }
 
 /**
@@ -68,7 +69,8 @@ export function useSkills() {
               description: 'No description available',
               category: 'General',
               image: '',
-              tags: [] as string[]
+              tags: [] as string[],
+              fullDescription: ''
             };
 
             // Fetch metadata if URI exists
@@ -98,7 +100,9 @@ export function useSkills() {
               isActive,
               totalCalls,
               metadataURI,
-              ...metadata
+              ...metadata,
+              // Map fullDescription properly if it exists, otherwise fallback to description
+              fullDescription: metadata.fullDescription || metadata.description
             } as SkillWithMetadata;
 
           } catch (err) {

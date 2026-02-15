@@ -31,6 +31,7 @@ export default function Marketplace() {
       name: skill.name,
       slug: `skill-${skill.skillId}`,
       description: skill.description,
+      fullDescription: skill.fullDescription || skill.description,
       price: `${formatEther(skill.pricePerUse)} MON`,
       unit: "per use",
       rating: 4.5 + (index % 5) * 0.1, // Mock rating for now
@@ -217,8 +218,11 @@ export default function Marketplace() {
                     <p className="text-xs text-slate-500 mb-1">
                       Creator: {skill.creator}
                     </p>
-                    <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                      {skill.description}
+                    <p
+                      className="text-sm text-slate-400 leading-relaxed mb-4 line-clamp-3"
+                      title={skill.fullDescription || skill.description}
+                    >
+                      {skill.fullDescription || skill.description}
                     </p>
 
                     <div className="flex flex-wrap gap-2 mb-3">

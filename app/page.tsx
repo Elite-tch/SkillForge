@@ -169,6 +169,56 @@ const Features = () => {
   );
 };
 
+const McpConfig = () => (
+  <section className="border-b border-white/5 bg-neutral-900/20 py-20 relative overflow-hidden">
+    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#8247e5]/50 to-transparent" />
+
+    <div className="mx-auto max-w-4xl px-4 text-center">
+      <div className="mb-10">
+        <div className="inline-flex items-center gap-2 rounded-full border border-[#8247e5]/30 bg-[#8247e5]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#8247e5] mb-6">
+          <Terminal className="h-3 w-3" />
+          Developer Action Required
+        </div>
+        <h2 className="text-3xl font-black uppercase tracking-tighter text-white font-display mb-4">
+          Enable SkillForge in your Agent
+        </h2>
+        <p className="text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
+          To give your AI assistant access to the entire marketplace, add this gateway configuration to your local MCP settings file.
+        </p>
+      </div>
+
+      <div className="relative group text-left max-w-2xl mx-auto">
+        <div className="absolute -inset-1 bg-gradient-to-r from-[#8247e5] to-[#00ffbd] opacity-20 blur group-hover:opacity-40 transition-opacity duration-500 rounded-xl" />
+        <div className="relative rounded-xl border border-white/10 bg-black p-6 shadow-2xl">
+          <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1.5">
+                <div className="h-2.5 w-2.5 rounded-full bg-red-500/20 border border-red-500/50" />
+                <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+                <div className="h-2.5 w-2.5 rounded-full bg-green-500/20 border border-green-500/50" />
+              </div>
+              <span className="ml-3 text-xs font-mono text-slate-500">~/.config/Claude/mcp_config.json</span>
+            </div>
+            <div className="text-[10px] font-bold uppercase tracking-widest text-slate-600">JSON</div>
+          </div>
+
+          <pre className="font-mono text-xs md:text-sm text-slate-300 overflow-x-auto p-2">
+            <code>
+              <span className="text-slate-500">{`{`}</span>
+              <span className="text-[#8247e5]">"mcpServers"</span>: <span className="text-slate-500">{`{`}</span>
+              <span className="text-[#00ffbd]">"skillforge"</span>: <span className="text-slate-500">{`{`}</span>
+              <span className="text-[#8247e5]">"url"</span>: <span className="text-yellow-300">"https://skillforge-mcp.onrender.com/sse"</span>
+              <span className="text-slate-500">{`}`}</span>
+              <span className="text-slate-500">{`}`}</span>
+              <span className="text-slate-500">{`}`}</span>
+            </code>
+          </pre>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
 const Flow = () => (
   <section className="relative border-b border-white/5 bg-neutral-950 py-24 overflow-hidden">
     <div className="mx-auto max-w-6xl px-4 relative z-10">
@@ -334,6 +384,7 @@ export default function Home() {
     <main className="min-h-screen bg-black text-white selection:bg-[#8247e5]/30 selection:text-white">
       <Hero />
       <Features />
+      <McpConfig />
       <Flow />
       <Footer />
     </main>
