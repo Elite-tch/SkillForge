@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Terminal, ArrowUpRight, ArrowLeft, Wallet, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { RainbowWalletConnect } from "@/RainbowWalletConnect";
 
 interface NavbarProps {
     backLink?: { href: string; label: string };
@@ -47,10 +48,9 @@ export function Navbar({ backLink, showDeck = false }: NavbarProps) {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <button className="group relative hidden sm:flex h-10 items-center justify-center gap-3 rounded-sm bg-[#00ffbd] px-6 text-[11px] font-black uppercase tracking-[0.2em] text-black transition-all hover:translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[-2px_2px_0_white] active:translate-x-0 active:translate-y-0 active:shadow-none">
-                            <Wallet className="h-4 w-4" />
-                            Connect
-                        </button>
+                        <div className="hidden sm:block">
+                            <RainbowWalletConnect />
+                        </div>
 
                         {/* Mobile Menu Toggle */}
                         <button
@@ -108,10 +108,9 @@ export function Navbar({ backLink, showDeck = false }: NavbarProps) {
                             </div>
 
                             <div className="mt-auto space-y-6">
-                                <button className="group relative flex w-full h-12 items-center justify-center gap-3 rounded-sm bg-[#00ffbd] px-6 text-[11px] font-black uppercase tracking-[0.2em] text-black transition-all hover:shadow-[-2px_2px_0_white] active:translate-x-0 active:translate-y-0 active:shadow-none">
-                                    <Wallet className="h-4 w-4" />
-                                    Connect Wallet
-                                </button>
+                                <div className="sm:hidden">
+                                    <RainbowWalletConnect />
+                                </div>
 
                                 <div className="flex items-center justify-center gap-2 rounded-sm border border-white/10 bg-white/5 py-3">
                                     <span className="h-1.5 w-1.5 rounded-full bg-[#00ffbd] animate-pulse shadow-[0_0_8px_#00ffbd]" />

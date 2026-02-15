@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit, Fira_Code } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "./components/Navbar";
+import { RainbowKitSetup } from "@/RainbowKitSetup";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -20,8 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${outfit.variable} ${firaCode.variable} font-sans antialiased bg-background text-foreground`}>
-        <Navbar showDeck />
-        {children}
+        <RainbowKitSetup>
+          <Navbar showDeck />
+          {children}
+        </RainbowKitSetup>
       </body>
     </html>
   );
